@@ -1,0 +1,35 @@
+.MainTable {
+  height: 350px;
+  max-height: 350px;
+  overflow-y: auto;
+  width: 80vw !important;
+  overflow-x: auto !important;
+}
+
+.MainTable::-webkit-scrollbar:horizontal {
+  height: 3px;
+}
+.MainTable::-webkit-scrollbar {
+  width: 3px;
+}
+  
+/* Track */
+.MainTable::-webkit-scrollbar-track {
+  background: #f1f1f1 !important; 
+}
+   
+/* Handle */
+.MainTable::-webkit-scrollbar-thumb, .MainTable::-webkit-scrollbar-thumb:horizontal:hover {
+  background: #888 !important; 
+}
+  
+/* Handle on hover */
+.MainTable::-webkit-scrollbar-thumb:hover {
+  background: #555 !important; 
+}
+.search_custom {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: inline-table;
+}

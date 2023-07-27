@@ -1,0 +1,254 @@
+import axios from "axios";
+import React, { useEffect, useMemo, useState } from "react";
+import { Link, useParams } from "react-router-dom";
+import Layout from "../../../../components/layout/Layout";
+import Table, {
+  AvatarCell,
+  RowActions,
+  SelectColumnFilter,
+  StatusPill,
+} from "../../../../components/Table/Table";
+import { API_URL } from "../../../../Config";
+import AddNewPetType from "./AddNewPetType";
+import EditPetType from "./EditPetType";
+// import '../../../../App.css'
+// import FilterForm from "../../../../components/Table/FilterForm";
+// import { toast } from "react-toastify";
+// import API from "../../../Redux/axios";
+
+const PetType = () => {
+  const [petTypes, setPetTypes] = useState([]);
+  const [selectedRowData, setSelectedRowData] = useState(null);
+  const [show, setShow] = React.useState(false);
+  const [edit, setEdit] = React.useState(false);
+  const [openTab, setOpenTab] = useState(1);
+  const [loading, setLoading] = useState(true);
+
+  const getPetTypes = async () => {
+    try {
+      const res = await axios({
+        url: API_URL + "/pet_master/",
+      });
+      if (res.status === 200) {
+        // console.log("res", res);
+        setPetTypes(res?.data?.data);
+      }
+    } catch (err) {
+      console.log(err?.response?.data);
+      // toast.error(err?.response?.data?.message);
+    }
+  };
+
+  const columns = useMemo(
+    () => [               
+      {
+        Header: "Pet Type",
+        accessor: "type",
+        Filter: SelectColumnFilter,
+      },
+      {
+        Header: "Pet Weight",
+        accessor: "weight",
+        Filter: SelectColumnFilter,
+      },
+      {
+        Header: 'Created By',
+        accessor: 'created_by',
+      },
+      {
+        Header: 'Created On',
+        accessor: 'created_on',
+        Filter: SelectColumnFilter,
+      },
+      {
+        Header: "Status",
+        accessor: "status",        
+        Cell: ({ value }) => (
+          <span
+            style={{
+              display: 'inline-block',
+              padding: '0.2em 0.6em',
+              borderRadius: '9999px',
+              backgroundColor: value === 'true' ? '#5cb85c' : '#d9534f',
+              color: 'white',
+            }}
+          >
+            {value}
+          </span>
+        ),
+      },
+      {
+        Header: "Actions",
+        api: "/pet_master/",
+        Cell: ({ row }) => (
+          <div>
+            <button onClick={() => handleEdit(row)}>Edit</button>
+            <button onClick={() => handleDelete(row)}>Delete</button>
+          </div>
+        ),
+      },
+    ],
+    []
+  );
+
+  const handleEdit = (row) => {
+    setSelectedRowData(row.original);
+    setEdit(true)
+  };
+
+  const handleClose = () => {
+    setEdit(false);
+    setSelectedRowData(null);
+  };
+
+  const handleDelete = async (row) => {
+    const rowId = row.original.id;
+    if (rowId) {
+      try {
+        const deletePort = await axios({
+          url: `${API_URL}/pet_master/${rowId}/`,
+          method: "DELETE",
+        });
+        if (deletePort) {
+          getPetTypes();
+        }
+      } catch (error) {
+        console.log('error', error);
+      }
+    }
+  };
+
+  useEffect(() => {
+    setTimeout(() => {
+      getPetTypes();
+      setLoading(false);
+    }, 3000)
+  }, []);
+
+  const data = useMemo(() => petTypes, [petTypes]);
+  return (
+    <>
+      <Layout>
+        <div className="sm:-mt-40 w-full">
+          <div className="min-h-screen bg-white text-gray-900 shadow-lg rounded">
+          <div className="min-h-screen bg-white text-gray-900 shadow-lg rounded-3xl">
+            <main className=" mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+              <div>
+                <div className="container mx-auto ">
+                  <div className=" flex-col items-center justify-center">
+                    <ul className="flex justify-between space-x-2 border-b-solid border-b border-b-[#C1C7CE]">
+                      <div className="flex flex-row">                                               
+                           <li>
+                          <Link
+                            to=""
+                            onClick={() => setOpenTab(1)}
+                            className={`${openTab === 1
+                              ? "text-sm font-bold text-[#0F8CB4] border-b-solid border-b-2 border-b-[#0F8CB4]"
+                              : ""
+                              } inline-block px-4 py-2 text-sm`}
+                          >
+                            ALL
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
+                            to=""
+                            onClick={() => setOpenTab(2)}
+                            className={` ${openTab === 2
+                              ? " text-sm font-bold text-[#0F8CB4] border-b-solid border-b-2 border-b-[#0F8CB4]"
+                              : ""
+                              } inline-block px-4 py-2 text-sm`}
+                          >
+                            CURRENT
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
+                            to=""
+                            onClick={() => setOpenTab(3)}
+                            className={` ${openTab === 3
+                              ? "text-sm font-bold text-[#0F8CB4] border-b-solid border-b-2 border-b-[#0F8CB4]"
+                              : ""
+                              } inline-block px-4 py-2 text-sm`}
+                          >
+                            UPCOMING
+                          </Link>
+                        </li>
+
+                        <li>
+                          <Link
+                            to=""
+                            onClick={() => setOpenTab(4)}
+                            className={` ${openTab === 4
+                              ? "text-sm font-bold text-[#0F8CB4] border-b-solid border-b-2 border-b-[#0F8CB4]"
+                              : ""
+                              } inline-block px-4 py-2 text-sm`}
+                          >
+                            PAST
+                          </Link>
+                        </li>
+                      </div>
+                      <div className="flex flex-end">
+                        <li>
+                          <button
+                            onClick={() => setShow(true)}
+                            className="bg-[#0F8CB4] hover:bg-[#0F8CB4] p-1 rounded-3xl text-white font-semibold hover:text-white  px-4 border border-blue-500 hover:border-transparent rounded"
+                          >
+                            Add New Pet Type
+                          </button>
+                        </li>
+                      </div>
+                    </ul>
+                    {/* <div className="p-3 mt-6 bg-white border">
+                      <div className={openTab === 1 ? "block" : "hidden"}>
+                        {" "}
+                        React JS with Tailwind CSS Tab 1 Content show
+                      </div>
+                      <div className={openTab === 2 ? "block" : "hidden"}>
+                        React JS with Tailwind CSS Tab 2 Content show
+                      </div>
+                      <div className={openTab === 3 ? "block" : "hidden"}>
+                        React JS with Tailwind CSS Tab 3 Content show
+                      </div>
+                      <div className={openTab === 4 ? "block" : "hidden"}>
+                        React JS with Tailwind CSS Tab 4 Content show
+                      </div>
+                    </div> */}
+                  </div>
+                </div>
+              </div>
+              <div className="mt-6">
+                <div className="flex flex-row">                  
+                  <div className="relative w-1/4 lg:max-w-sm mr-5">
+                    <label>Pet Type</label>
+                    <select
+                      id=""
+                      class="block  w-full p-2 mb-6 text-sm text-[#EDEDEF]-900 border border-[#EDEDEF]-300 rounded-lg bg-[#EDEDEF]-50 focus:ring-[#EDEDEF]-500 focus:border-[#EDEDEF]-500 dark:bg-[#EDEDEF]-700 dark:border-[#EDEDEF]-600 dark:placeholder-[#EDEDEF]-400 dark:text-white dark:focus:ring-[#EDEDEF]-500 dark:focus:border-[#EDEDEF]-500"
+                    >
+                      <option value="">Dog</option>
+                      <option value="">Cat</option>
+                    </select>
+                  </div>
+
+                  <div className="">
+                    {/* <GlobalFilter 
+                      preGlobalFilteredRows={preGlobalFilteredRows}
+                      globalFilter={globalFilter}
+                      setGlobalFilter={setGlobalFilter}
+                      label={label}
+                  /> */}
+                  </div>
+                  <AddNewPetType onClose={() => setShow(false)} show={show} />
+                  <EditPetType onClose={handleClose} edit={edit} selectedRowData={selectedRowData} />                                  
+                </div>
+                <Table columns={columns} data={data} label={"Ports"} loading={loading} />
+              </div>
+            </main>
+          </div>
+        </div>
+        </div>
+      </Layout>
+    </>
+  );
+}
+export default PetType;

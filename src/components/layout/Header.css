@@ -1,0 +1,71 @@
+body{
+    background: #EBF1F4;
+
+}
+.topmenubar {
+    z-index: 1;
+    position: fixed !important;
+    top: 0;
+}
+
+.basic-nav-dropdown{
+    color:#fff
+}
+.navbar {
+    background: #FFFFFF;
+}
+.homeLinksNav ul li.userImgUI .login_main, .homeLinksNav ul li.userImgUI .signup_main {
+    color: #0F8CB4;
+
+}
+
+.nav-item.dropdown a.dropdown-toggle.show.nav-link {
+    color:#646464 !important;
+
+}
+
+.nav-item.dropdown a.dropdown-toggle{
+    border: 1px solid #CDCED9;
+    border-right: 0;
+    border-radius: 30px;
+    text-transform: initial;
+    margin-bottom: 0;
+    color:#646464 !important;
+}
+a.dropdown-toggle:focus.show.nav-link {
+    color:#646464 !important;
+}
+.brdLeft{
+    border-left: 1px solid #EBF1F4;
+}
+.footer{
+    display: none;
+}
+
+
+ul li.userImgUI {
+    align-items: center;
+    border: 1px solid #CDCED9;
+    border-radius: 40px;
+    display: flex;
+}
+
+ul li.userImgUI .login_main {
+    border-right: 1px solid #CDCED9;
+    transition: all .3s ease-in;
+}
+
+ul li.userImgUI .login_main, ul li.userImgUI .signup_main {
+    color: #fff;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 7px;
+    text-decoration: none;
+    text-transform: uppercase;
+}
+
+/* ul li.userImgUI .login_main {
+    border: 1px solid #CDCED9;
+    transition: all .3s ease-in;
+} */
